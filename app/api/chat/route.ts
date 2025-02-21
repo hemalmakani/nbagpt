@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { DataAPIClient } from "@datastax/astra-db-ts";
+import { OpenAIStreamCallbacksAndOptions } from "ai";
 
 const {
   ASTRA_DB_NAMESPACE,
@@ -68,11 +69,7 @@ export async function POST(req: Request) {
       messages: [template, ...messages],
     });
 
-    const stream = OpenAIStream(response, {
-      onCompletion: (completion) => {
-        console.log("Stream completed:", completion);
-      },
-    });
+    const stream = OpenAIStream(response as OpenAIStreamCallbacksAndOptions);
     return new StreamingTextResponse(stream);
   } catch (err) {
     throw err;
