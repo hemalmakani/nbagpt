@@ -67,7 +67,12 @@ export async function POST(req: Request) {
       stream: true,
       messages: [template, ...messages],
     });
-    const stream = OpenAIStream(response);
+
+    const stream = OpenAIStream(response, {
+      onCompletion: (completion) => {
+        console.log("Stream completed:", completion);
+      },
+    });
     return new StreamingTextResponse(stream);
   } catch (err) {
     throw err;
